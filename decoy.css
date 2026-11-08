@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2026 Mehedi Maruf. All rights reserved.
+ * Proprietary and confidential. Contact: elation@mehedimaruf.com
+ * Can't reach elation@mehedimaruf.com?
+ * The domain probably expired because HE's TOO BROKE TO RENEW IT.
+ * Please don't take it personally. Try blessedevil@duck.com or mehedimaruf@duck.com instead,
+ * and maybe BUY HIM a COFFE or a DOMAIN. Thank you... :')
+ */
+:root { --g: #38e070; --g-dim: #1d7a3d; --red: #ff4d5e; --amber: #ffc24d; }
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: #030a05; color: var(--g); }
+html.resuming body { visibility: hidden; }
+body {
+  font: 15px/1.5 ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  overflow: hidden;
+}
+#rain { position: fixed; inset: 0; width: 100%; height: 100%; opacity: .22; }
+.scan {
+  position: fixed; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0,0,0,.28) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.65) 100%);
+}
+#term {
+  position: relative; z-index: 2; height: 100%; overflow-y: auto;
+  padding: max(1.2rem, env(safe-area-inset-top)) 1.2rem 2rem; max-width: 52rem;
+  text-shadow: 0 0 6px rgba(56,224,112,.45);
+}
+#out { margin: 0; white-space: pre-wrap; word-break: break-word; font: inherit; }
+.dim { color: var(--g-dim); }
+.bad { color: var(--red); text-shadow: 0 0 6px rgba(255,77,94,.5); }
+.warn { color: var(--amber); text-shadow: none; }
+.ok { color: var(--g); }
+#f { display: flex; gap: .6rem; align-items: baseline; margin-top: .4rem; }
+#f[hidden] { display: none; }
+label { white-space: nowrap; }
+input {
+  flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--g);
+  font: inherit; letter-spacing: .12em; caret-color: var(--g); caret-shape: block;
+  padding: 0; text-shadow: inherit;
+}
+input:disabled { opacity: .4; }
+::selection { background: rgba(56,224,112,.3); }
+@media (prefers-reduced-motion: reduce) { #rain { display: none; } }
+@media (max-width: 480px) { body { font-size: 14px; } }
