@@ -109,12 +109,19 @@ async function submit(ev) {
   const tick = setInterval(() => { spin.textContent = 'verifying signature ' + '▒'.repeat(1 + (n++ % 6)) + '\n'; }, 160);
   timers.add(tick);
 
-  let app = null, S = null;
-  try {
-    S = await C.deriveS(pass, C.unb64(V.salt), V.iter);
-    app = await tryOpen(S);
-  } catch { app = null; }
+  // Separate "the browser cannot do this" (e.g. plain http has no WebCrypto) from "wrong key",
+  // so a missing certificate never masquerades as a rejected passphrase.
+  let app = null, S = null, envFail = false;
+  try { S = await C.deriveS(pass, C.unb64(V.salt), V.iter); } catch { envFail = true; }
+  if (!envFail) { try { app = await tryOpen(S); } catch { app = null; } }
   clearInterval(tick); timers.delete(tick);
+
+  if (envFail) {
+    spin.textContent = 'verifying signature ▒ failed\n';
+    line('ERR: secure channel required. open this node over https.', 'bad');
+    busy = false; input.disabled = false; input.focus();
+    return;
+  }
 
   if (app) {
     spin.textContent = 'verifying signature ▒▒▒▒▒▒ done\n';
@@ -165,6 +172,7 @@ async function boot() {
     ['', ''],
   ];
   for (const [t, c] of lines) { line(t, c); await sleep(reduced ? 0 : 150 + Math.random() * 180); }
+  if (!window.isSecureContext || !(window.crypto && crypto.subtle)) line('[ fail ] no secure channel: this node only answers over https', 'bad');
   line('restricted node. authorised personnel only.', 'dim');
   line('', '');
   form.hidden = false;
