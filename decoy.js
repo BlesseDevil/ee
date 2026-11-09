@@ -146,8 +146,27 @@ async function submit(ev) {
   busy = false; input.disabled = false; input.focus();
 }
 
+// ---- plain http: say so, show the https link, and take them there -----------------------
+// Browsers switch off the encryption this page needs on http, so a key could never work. localhost is exempt.
+const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+function insecure() {
+  document.documentElement.classList.remove('resuming');
+  const url = 'https://' + location.host + location.pathname + location.search;
+  line('relay-69  secure shell gateway  v4.2.1', '');
+  line('', '');
+  line('[ fail ] insecure channel detected (http)', 'bad');
+  line('this node only answers over https. rerouting...', 'warn');
+  const a = document.createElement('a');
+  a.href = url; a.textContent = url; a.className = 'lnk';
+  const s = document.createElement('span');
+  s.append('open it securely > ', a, '\n');
+  out.appendChild(s);
+  later(() => location.replace(url), 1800);
+}
+
 // ---- boot ------------------------------------------------------------------
 async function boot() {
+  if (location.protocol === 'http:' && !isLocalHost) return insecure();
   try {
     const S = sessionStorage.getItem('ert.s');
     if (S) {
@@ -163,7 +182,7 @@ async function boot() {
   on(document, 'click', () => { if (!input.disabled) input.focus(); });
 
   const lines = [
-    ['relay-07  secure shell gateway  v4.2.1', ''],
+    ['relay-69  secure shell gateway  v4.2.1', ''],
     ['', ''],
     ['[  ok  ] loading kernel modules', 'ok'],
     ['[  ok  ] mounting encrypted volumes', 'ok'],

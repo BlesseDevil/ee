@@ -28,6 +28,7 @@ body {
 }
 #out { margin: 0; white-space: pre-wrap; word-break: break-word; font: inherit; }
 .dim { color: var(--g-dim); }
+.lnk { color: var(--g); text-decoration: underline; text-underline-offset: 3px; word-break: break-all; }
 .bad { color: var(--red); text-shadow: 0 0 6px rgba(255,77,94,.5); }
 .warn { color: var(--amber); text-shadow: none; }
 .ok { color: var(--g); }
